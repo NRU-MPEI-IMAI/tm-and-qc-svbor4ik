@@ -1,0 +1,88 @@
+name: unary multiplication
+source code: |-
+  input: '(()])'
+  blank: ' '
+  start state: start
+  table:
+    start:
+      '(': {R: findparentheses}
+      '{': {R: findcurlbr}
+      '[': {R: findsqbr}
+      ')': {R: error}
+      '}': {R: error}
+      ']': {R: error}
+      '$': R
+      ' ': {write: 'Y', L: cleanleft}
+    findparentheses:
+      ')': {write: '$', L: deleteLeft}
+      ['(', '$']: {R}
+      ' ': {L: error}
+      '{': {R: findcurlbr}
+      '[': {R: findsqbr}
+      ['}', ']']: {L: error}
+    findcurlbr:
+      '}': {write: '$', L: deleteLeft}
+      ['{', '$']: {R}
+      ' ': {L: error}
+      '(': {R: findparentheses}
+      '[': {R: findsqbr}
+      [')', ']']: {L: error}
+    findsqbr:
+      ']': {write: '$', L: deleteLeft}
+      ['[', '$']: {R}
+      ' ': {L: error}
+      '{': {R: findcurlbr}
+      '(': {R: findparentheses}
+      ['}', ')']: {L: error}
+    deleteLeft:
+      '$': {L}
+      ['(', '{', '[']: {write: '$', L: tobegin}
+    tobegin:
+      ['(', '{', '[', ')', '}', ']', '$']: {L}
+      ' ': {R: start}
+    error:
+      ['(', '{', '[', ')', '}', ']', '$', ' ']: {write: N, L: cleanleft}
+
+    cleanleft: # очистка слева
+      '(': {write: ' ', L}
+      '{': {write: ' ', L}
+      '[': {write: ' ', L}
+      '$': {write: ' ', L}
+      ')': {write: ' ', L}
+      '}': {write: ' ', L}
+      ']': {write: ' ', L}
+      ' ': {R: toansright}
+    toansright:
+      ' ': R
+      'N': {R: cleanright}
+      'Y': {R: cleanright}
+    cleanright: # очистка справа от ответа
+      Y: R
+      N: R
+      '(': {write: ' ', R}
+      '{': {write: ' ', R}
+      '[': {write: ' ', R}
+      '$': {write: ' ', R}
+      ')': {write: ' ', R}
+      '}': {write: ' ', R}
+      ']': {write: ' ', R}
+      ' ': {L: answer}
+    answer: # приходим к ответу
+      ' ': L
+      N: {R: done}
+      Y: {R: done}
+    done:
+   
+positions:
+  start: {x: 246.38, y: 346.28, fixed: false}
+  findparentheses: {x: 238.48, y: 173.47, fixed: false}
+  findcurlbr: {x: 344.63, y: 227.92, fixed: false}
+  findsqbr: {x: 181.53, y: 272.93, fixed: false}
+  deleteLeft: {x: 291.78, y: 339.82, fixed: false}
+  tobegin: {x: 333.4, y: 473.14, fixed: false}
+  error: {x: 347.96, y: 322.8, fixed: false}
+  cleanleft: {x: 304.9, y: 189.81, fixed: false}
+  toansright: {x: 414.23, y: 78.5, fixed: false}
+  cleanright: {x: 564.63, y: 79.81, fixed: false}
+  answer: {x: 658.81, y: 195.11, fixed: false}
+  done: {x: 520, y: 190}

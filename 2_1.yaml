@@ -1,0 +1,51 @@
+name: unary multiplication
+source code: |-
+
+  input: '10201' 
+  blank: ' '
+
+
+  start state: each0
+  table:
+    each0:
+      '0': {write: '*', L: back0}  
+      ['*','1','2']: R
+      ' ': {L: check}  
+    each1:
+      '1': {write: '*', L: back1} 
+      ['*','0','2']: R
+      ' ': {write: 'F', R: done} 
+    each2:
+      '2': {write: '*', L: back2}
+      ['*','0','1']: R
+      ' ': {write: 'F', R: done}  
+    check:
+      '*': L
+      ['0','1','2']: {L: back2}
+      ' ': {R: go}
+    go:
+      '*': R
+      ' ': {write: 'T', R: done} 
+    back0: 
+      ['*','0','1','2']: L
+      ' ': {R: each1}
+    back1: 
+      ['*','0','1','2']: L
+      ' ': {R: each2}
+    back2: 
+      ['*','0','1','2']: L
+      ' ': {R: each0}
+
+    done:
+
+   
+positions:
+  each0: {x: 488.41, y: 342.58, fixed: false}
+  each1: {x: 407.44, y: 303.34, fixed: false}
+  each2: {x: 361.89, y: 150.31, fixed: false}
+  check: {x: 449.62, y: 198.81, fixed: false}
+  go: {x: 479.79, y: 54.07, fixed: false}
+  back0: {x: 396.87, y: 451.12, fixed: false}
+  back1: {x: 259.98, y: 252.34, fixed: false}
+  back2: {x: 342.08, y: 296.48, fixed: false}
+  done: {x: 520, y: 190}

@@ -1,0 +1,61 @@
+name: unary multiplication
+source code: |-
+  input: '011101 11 101'
+  blank: ' '
+  start state: start
+  table:
+    start: # ставим границу слева
+      [1, 0]: {L}
+      ' ': {write: '#', R: setrightbound}
+    setrightbound:
+      [1, 0]: {R}
+      ' ': {R: setrightbound2}
+    setrightbound2: # ставим границу слева
+      [1, 0]: {R: setrightbound}
+      ' ': {write: '*', L: goToTheBegin}
+    goToTheBegin: # идем до границы слева
+      [1, 0, 'I', 'O', ' ']: {L}
+      '#': {R: change}
+    change: # постепенная замена
+      ['I', 'O']: {R}
+      1: {write: 'I', R: nextWord}
+      0: {write: 'O', R: nextWord}
+      ' ': {L: maskWord} # слово оказалось короче другого
+      '*': {L: goToTheBegin} # дошли до правого конца
+    nextWord:
+      [1, 0]: {R}
+      ' ': {R: change}
+      '*': {L: goToTheBegin} # достигли правой границы
+    maskWord: # помечаем верное искомое слово
+      'I': {write: 'B', L}
+      'O': {write: 'A', L}
+      ' ': {write: '&', L: clearLeft}
+      '#': {write: '&', R: clearRight}
+    clearLeft:
+      ' ': {L}
+      [1, 0, 'I', 'O']: {write: ' ', L}
+      '#': {write: ' ', R: clearRight}
+    clearRight:
+      [' ', 'A', 'B', '&']: {R}
+      [1, 0, 'I', 'O']: {write: ' ', R}
+      '*': {write: ' ', L: unmaskWord}
+    unmaskWord: # возвращаем слово
+      ' ': {L}
+      'A': {write: 0, L}
+      'B': {write: 1, L}
+      '&': {write: ' ', R: done}
+    done:
+
+   
+positions:
+  start: {x: 187.2, y: 91.57, fixed: false}
+  setrightbound: {x: 320.24, y: 39.16, fixed: false}
+  setrightbound2: {x: 290.34, y: 179.17, fixed: false}
+  goToTheBegin: {x: 284.49, y: 323.4, fixed: false}
+  change: {x: 359.32, y: 444.87, fixed: false}
+  nextWord: {x: 217.86, y: 446.1, fixed: false}
+  maskWord: {x: 494.67, y: 397.19, fixed: false}
+  clearLeft: {x: 614.05, y: 319.75, fixed: false}
+  clearRight: {x: 485.68, y: 250.53, fixed: false}
+  unmaskWord: {x: 469.04, y: 92.93, fixed: false}
+  done: {x: 520, y: 190}

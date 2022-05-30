@@ -1,0 +1,53 @@
+name: unary multiplication
+source code: |-
+
+  input: '(()){}[]' 
+  blank: ' '
+
+
+  start state: each
+  table:
+    each:
+      '(': {write: '*', R: check0} 
+      '{': {write: '*', R: check1} 
+      '[': {write: '*', R: check2} 
+      [')',']','}','*']: R
+      ' ': {L: ch}  
+    check0:
+      ['(','{','[',']','}','*']: R
+      ')': {write: '*', L: back}
+      ' ': {write: 'F', R: done}
+    check1:
+      ['(','{','[',']',')','*']: R
+      '}': {write: '*', L: back}
+      ' ': {write: 'F', R: done}
+    check2:
+      ['(','{','[',')','}','*']: R
+      ']': {write: '*', L: back}
+      ' ': {write: 'F', R: done}
+    back: 
+      ['(','{','[',')',']','}','*']: L
+      ' ': {R: each}
+    ch:
+      '*': L
+      ['(','{','[',')',']','}']: {L: fail}
+      ' ': {R: nofail}
+    fail:
+      ['(','{','[',')',']','}','*']: R
+      ' ': {write: 'F', R: done}
+    nofail:
+      ['(','{','[',')',']','}','*']: R
+      ' ': {write: 'T', R: done}  
+    done:
+
+   
+positions:
+  each: {x: 462.23, y: 245.48, fixed: false}
+  check0: {x: 470.92, y: 364.57, fixed: false}
+  check1: {x: 366.44, y: 155.28, fixed: false}
+  check2: {x: 342.61, y: 185.87, fixed: false}
+  back: {x: 332.32, y: 315.22, fixed: false}
+  ch: {x: 587.28, y: 162.58, fixed: false}
+  fail: {x: 608.5, y: 306.22, fixed: false}
+  nofail: {x: 493.48, y: 48.96, fixed: false}
+  done: {x: 520, y: 190}
